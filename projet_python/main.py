@@ -27,7 +27,7 @@ def Main():
                 mode_PVAI()
             elif mode == 3:
                 flag = False
-                leaderboard.Tableau_scores.afficher_leaderboard()
+                tableau_scores.Tableau_scores.afficher_leaderboard()
             else:
                 continue
         except ValueError:
