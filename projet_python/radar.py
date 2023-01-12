@@ -2,17 +2,17 @@ class Radar:
     """La classe 'Radar' permet de voir ses tirs et si ils sont touché ou raté"""
 
 
-    def __init__(self, width=10, height=10):
-        self.radar = [["." for i in range(width)] for i in range(height)]
+    def __init__(self, largeur=10, hauteur=10):
+        self.radar = [["." for i in range(largeur)] for i in range(hauteur)]
 
     def __getitem__(self, point):
-        row, col = point
-        return self.radar[row][col]
+        rangee, colonne = point
+        return self.radar[rangee][colonne]
 
-    def __setitem__(self, point, value):
-        row, col = point
-        self.radar[row][col] = value
+    def __setitem__(self, point, valeur):
+        rangee, colonne = point
+        self.radar[rangee][colonne] = valeur
 
-    def view_radar(self):
-        for row in self.radar:
-            print(" ".join(row))
+    def afficher_radar(self):
+        for rangee in self.radar:
+            print(" ".join(rangee))
