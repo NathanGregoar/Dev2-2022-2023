@@ -12,9 +12,9 @@ class Testmode_PVAI(unittest.TestCase):
 
     def test_jouerPVAI(self):
         partie = mode_PVAI()
-        partie.joeurPVAI()
+        partie.jouer_PVAI()
         self.assertIsInstance(partie.p, Joueur)
-        self.assertIsinstance(partie.c, IA)
+        self.assertIsInstance(partie.c, IA)
         self.assertEqual(partie.flag, False)
 
 

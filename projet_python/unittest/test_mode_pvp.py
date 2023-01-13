@@ -2,6 +2,7 @@ import unittest
 from joueur import Joueur
 from mode_pvp import Mode_PVP
 
+
 class TestModePVP(unittest.TestCase):
 
     def test_flotte_coulee(self):
@@ -22,7 +23,8 @@ class TestModePVP(unittest.TestCase):
         joueur1.score = 10
         joueur2 = Joueur("Joueur 2")
         self.assertEqual(mode_pvp.message_victoire(joueur1, joueur2),
-        "\n\n\n*****************************************\nLa flotte de Joueur 2 a été détruite, le vainqueur est Joueur 1 !\n*****************************************\nJoueur 1, ton score est de : 10")
+                         "\n\n\n*****************************************\nLa flotte de Joueur 2 a été détruite, "
+                         "le vainqueur est Joueur 1 !\n*****************************************\nJoueur 1, ton score est de : 10")
 
     def test_PVP(self):
         mode_pvp = Mode_PVP()

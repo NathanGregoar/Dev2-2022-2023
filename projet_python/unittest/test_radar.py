@@ -1,6 +1,7 @@
 import unittest
 from radar import Radar
 
+
 class TestRadar(unittest.TestCase):
     def test_init(self):
         radar = Radar()
@@ -21,3 +22,6 @@ class TestRadar(unittest.TestCase):
         with self.assertRaises(IndexError):
             radar[10, 10] = "X"
 
+
+if __name__ == "__main__":
+    unittest.main()
