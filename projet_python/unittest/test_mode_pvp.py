@@ -2,7 +2,6 @@ import unittest
 from joueur import Joueur
 from mode_pvp import Mode_PVP
 
-
 class TestModePVP(unittest.TestCase):
 
     def test_flotte_coulee(self):
