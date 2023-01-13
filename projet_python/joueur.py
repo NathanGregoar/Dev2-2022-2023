@@ -1,27 +1,41 @@
-from tableu_de_jeu import Tableu_de_jeu
+from tableau_de_jeu import TableauDeJeu
 from radar import Radar
 from bateau import Bateau
 
-class Joueur:
-    """La classe 'Player' gère les données et les actions des différents joueurs lors de la partie"""
 
+class Joueur:
     bateaux = {"Porte-avion": 5, "Croiseur": 4, "Destroyer": 3, "Frégate": 2}
 
     def __init__(self, nom):
-        self.tableau = Tableu_de_jeu()
+        """
+            Initialise un joueur avec un nom donné.
+
+            PRE:
+                - nom est une chaîne de caractères représentant le nom du joueur.
+            POST:
+                - Le joueur est initialisé avec un océan, un radar et le nom donné.
+                - Le joueur a un score initialisé à 0.
+                - Le joueur a une flotte initialement vide.
+        """
+
+        self.tableau = TableauDeJeu()
         self.radar = Radar()
         self.nom = nom
         self.flotte = []
-        self.score = 64
-
-    """Cette méthode utilise les input des joueurs pour placer les bateaux
-    pour chaque bateau, un objet ship contenant les coordonnées des bateaux est ajouté au tableau de jeu"""
+        self.score = 0
 
     def positionner_flotte(self):
-        print("**********NOTE**************")
-        input("Il faut encoder des chiffres entre 0 et 9 pour choisir les rangées et les colonnes sur le plateu de jeu")
+        """
+            Demande au joueur de placer sa flotte sur le plateau de jeu.
+
+            PRE:
+                - /
+            POST:
+                - La flotte du joueur est placée sur le plateau de jeu.
+        """
+
+        input("Encodez des chiffres entre 0 et 9 pour choisir les rangées et les colonnes sur le plateau de jeu")
         input("Les bateaux se place de gauche à droite et de haut en bas")
-        print("****************************")
         for bateau, taille in self.bateaux.items():
 
             flag = True
@@ -31,7 +45,8 @@ class Joueur:
                     print(f"Placer le {bateau}")
                     rangee = int(input("Quelle rangée ? "))
                     colonne = int(input("Quelle colonne ? "))
-                    orientation = str(input("Voulez-vous le placer à la verticale ou à l'horizontale ? (choisir v ou h) "))
+                    orientation = str(
+                        input("Placer le bateau à la verticale (v) ou à l'horizontale (h) ?"))
 
                     if orientation in ["v", "V"]:
                         if self.tableau.position_rangee_valide(rangee, colonne, taille):
@@ -41,7 +56,7 @@ class Joueur:
                             self.flotte.append(navire)
                             flag = False
                         else:
-                            input("Les bateaux se croisent, placer-le autre part")
+                            input("Plusieurs bateaux se croisent, mettez-le ailleurs !")
 
                     elif orientation in ["h", "H"]:
                         if self.tableau.position_colonne_valide(rangee, colonne, taille):
@@ -51,37 +66,65 @@ class Joueur:
                             self.flotte.append(navire)
                             flag = False
                         else:
-                            input("Les bateaux se croisent, placer-le autre part")
+                            input("Plusieurs bateaux se croisent, mettez-le ailleurs !")
 
                     else:
                         continue
                     self.afficher_console()
 
                 except ValueError:
-                    print("Vous avez oublié votre tête soldat ?\nIl faut écrire un chiffre..\n")
-
-    # Cette méthode affiche le radar et l'océan d'une manière lisible
+                    print("Veuillez entrer un chiffre de 0 à 9 !")
 
     def afficher_console(self):
+        """
+            Affiche le radar et le plateau de jeu du joueur.
+
+            PRE:
+                - /
+            POST:
+                - Le radar et le plateau de jeu du joueur sont affichés.
+        """
+
         self.radar.afficher_radar()
         print("|                 |")
         self.tableau.voir_tableau()
 
-    # Cette méthode vérifie le status des différents bateaux de la flotte du joueur
-
     def enregistrer_tir(self, rangee, colonne):
+        """
+            Enregistre un coup reçu par le joueur à la coordonnée (rangee, colonne).
+
+            PRE:
+                - rangee est un entier représentant une ligne du plateau de jeu.
+                - colonne est un entier représentant une colonne du plateau de jeu.
+            POST:
+                - Si un navire de la flotte du joueur est touché à la coordonnée (rangee, colonne), cette coordonnée
+                  est retirée de la liste des coordonnées du navire.
+                - Si le navire est coulé, il est retiré de la flotte du joueur et un message est affiché indiquant que
+                  le navire a été coulé.
+        """
+
         for navire in self.flotte:
             if (rangee, colonne) in navire.coords:
                 navire.coords.remove((rangee, colonne))
                 if navire.check_etat_bateau():
                     self.flotte.remove(navire)
-                    print("COULÉ!!!")
+                    print("Coulé !")
                     print(f"Le {navire.classe_bateau} de l'ennemi {self.nom} a été coulé !")
 
-    """L'interface du joueur pour gérer les tirs,
-    cette méthode met à jour l'état des plateaux de jeu des joueurs"""
-
     def tir(self, cible):
+        """
+            Fait attaquer le joueur ciblé par un autre joueur.
+
+            PRE:
+                - self est un objet joueur représentant le joueur effectuant l'attaque.
+                - cible est un objet joueur représentant le joueur ciblé par l'attaque.
+            POST:
+                - Le joueur ciblé est attaqué et son bateau est touché s'il se trouve sur les coordonnées choisies.
+                - La grille de radar du joueur effectuant l'attaque est mise à jour en fonction de la réussite ou
+                  l'échec de l'attaque.
+                - Le score du joueur effectuant l'attaque est mis à jour en fonction de la réussite ou non de l'attaque.
+        """
+
         self.afficher_console()
         try:
             print(f"\n{self.nom} choisissez votre cible...")
@@ -98,19 +141,19 @@ class Joueur:
 
                 else:
                     if self.radar.radar[row][col] == "O":
-                        print("Zone déjà touchée, vérifier votre radar !")
+                        print("Vous avez déja tiré ici ! Vérifier votre radar !")
                         self.tir(cible)
                     elif self.radar.radar[row][col] == "X":
-                        print("Zone déjà touchée, vérifier votre radar !")
+                        print("Vous avez déja tiré ici ! Vérifier votre radar !")
                         self.tir(cible)
                     else:
-                        print("Négatif...")
+                        print("Raté...")
                         self.radar.radar[row][col] = "O"
                         self.score -= 1
 
             else:
-                print("Coordonnées hors d'atteinte...")
+                print("Hors zone !")
                 self.tir(cible)
         except ValueError:
-            print("Il faut encoder un nombre...\n")
+            print("Veuillez entrer un nombre !")
             self.tir(cible)
